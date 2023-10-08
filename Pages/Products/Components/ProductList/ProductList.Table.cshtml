@@ -1,0 +1,59 @@
+@model ProductList
+
+<table class="table table-bordered">
+  <thead>
+  <tr>
+    <th style="width: 40px" class="align-middle text-center">
+      <input type="checkbox" role="button" class="form-check-inline m-auto"
+             checked="@(ViewBag.AllSelected ? "checked" : null)"
+             hydro-action="SelectAll" param-value="@(!ViewBag.AllSelected)"/>
+    </th>
+    <th hydro-action="Sort" param-value="@nameof(Product.Name)" role="button">
+      Name @GetSorting(ProductSorting.Name)
+    </th>
+    <th hydro-action="Sort" param-value="@nameof(Product.Price)" class="text-end" role="button" style="width: 150px">
+      Price @GetSorting(ProductSorting.Price)
+    </th>
+    <th hydro-action="Sort" param-value="@nameof(Product.Stock)" class="text-end" role="button" style="width: 150px">
+      Stock @GetSorting(ProductSorting.Stock)
+    </th>
+    <th style="width: 70px"></th>
+  </tr>
+  </thead>
+  <tbody>
+  @foreach (Product product in ViewBag.Products)
+  {
+    var selected = Model.Selection.Contains(product.Id);
+
+    <tr class="@(selected ? "table-active" : null)">
+      <td class="align-middle text-center">
+        <input type="checkbox" role="button" class="form-check-inline m-auto"
+               checked="@(selected ? "checked" : null)"
+               hydro-action="Select" param-id="@product.Id" param-value="@(!selected)"/>
+      </td>
+      <td class="align-middle">
+        @product.Name
+      </td>
+      <td class="align-middle text-end">
+        @product.Price.ToString("##,#0.00")
+      </td>
+      <td class="align-middle text-end">
+        @product.Stock
+      </td>
+      <td class="align-middle text-center">
+        <button type="button" class="btn btn-sm btn-outline-danger"
+                hydro-action="Remove" param-id="@product.Id">
+          ╳
+        </button>
+      </td>
+    </tr>
+  }
+  </tbody>
+</table>
+
+@{
+  string GetSorting(ProductSorting sorting) =>
+    Model.Sorting.Column == sorting
+      ? Model.Sorting.Ascending ? "\u2193" : "\u2191"
+      : null;
+}

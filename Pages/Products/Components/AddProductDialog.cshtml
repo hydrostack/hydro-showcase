@@ -1,0 +1,37 @@
+@model AddProductDialog
+
+<div class="modal d-block init" tabindex="-1">
+  <div class="modal-dialog shadow-lg">
+    <div class="modal-content @(!Model.ModelState.IsValid ? "shake" : null)" x-init="@DateTime.Now.Ticks; @(!Model.ModelState.IsValid ? "setTimeout(() => $el.classList.remove('shake'), 300)" : null)">
+      <form method="post" hydro-action="Save">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button type="button" class="btn-close" aria-label="Close" hydro-action="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label asp-for="Name" class="form-label">Name</label>
+            <input asp-for="Name" class="form-control" x-init="$el.focus()" hydro-bind/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+          </div>
+
+          <div class="mb-3">
+            <label asp-for="Price" class="form-label">Price</label>
+            <input asp-for="Price" class="form-control" required hydro-bind bind-event="input" bind-debounce="1000">
+            <span asp-validation-for="Price" class="text-danger"></span>
+          </div>
+
+          <div class="mb-3">
+            <label asp-for="Stock" class="form-label">Stock</label>
+            <input asp-for="Stock" class="form-control" required hydro-bind>
+            <span asp-validation-for="Stock" class="text-danger"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" hydro-action="Close">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

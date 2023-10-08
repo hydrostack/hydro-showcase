@@ -1,0 +1,37 @@
+@model ProductList
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-between mb-3">
+  <div>
+    @if (ViewBag.HasProducts || ViewBag.HasSearch)
+    {
+      <div class="input-group" style="max-width: 400px">
+        <input class="form-control" placeholder="Search"
+               asp-for="SearchPhrase"
+               hydro-bind bind-event="input" bind-debounce="500"/>
+
+        @if (ViewBag.HasSearch)
+        {
+          <button class="btn btn-outline-secondary" type="button" hydro-action="ClearSearch">
+            ╳
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  <div>
+    @if (Model.Selection.Any())
+    {
+      <div class="d-inline-block position-relative">
+        <button type="button" class="btn btn-primary init" hydro-action="Order">
+          Order (@(Model.Selection.Count))
+        </button>
+        <hydro name="ProductOrderValidation"/>
+      </div>
+    }
+
+    <button class="btn btn-primary" type="button" hydro-action="Add">
+      Add product
+    </button>
+  </div>
+</div>

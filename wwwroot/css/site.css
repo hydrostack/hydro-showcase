@@ -1,0 +1,44 @@
+
+body {
+  margin-bottom: 60px;
+}
+
+.init {
+  animation: scaleAnimation 0.2s ease-out forwards;
+}
+
+.shake {
+  animation: shake 0.3s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes scaleAnimation {
+  0% {
+    transform: translateY(-50px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+th[role="button"]:hover {
+  background-color: #fafafa;
+}

@@ -1,0 +1,21 @@
+@model ProductList
+
+<div>
+  <partial name="ProductList.Header.cshtml"/>
+
+  @if (!ViewBag.HasProducts)
+  {
+    <div class="d-flex justify-content-center align-items-center text-muted bg-light rounded" style="height: 200px;">
+      <h6>No products to show</h6>
+    </div>
+  }
+  else
+  {
+    <partial name="ProductList.Table.cshtml"/>
+  }
+
+  @if (Model.ShowAddDialog)
+  {
+    <hydro name="AddProductDialog"/>
+  }
+</div>
