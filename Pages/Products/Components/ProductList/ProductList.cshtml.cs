@@ -22,33 +22,32 @@ public class ProductList : HydroComponent
     public string SearchPhrase { get; set; }
     public (ProductSorting Column, bool Ascending) Sorting { get; set; }
 
-    private Cache<Task<Product[]>> Products =>
-        Cache(async () =>
-        {
-            var query = _productsStorage.Query();
-
-            if (!string.IsNullOrWhiteSpace(SearchPhrase))
-            {
-                query = query.Where(p => p.Name.Contains(SearchPhrase, StringComparison.OrdinalIgnoreCase));
-            }
-
-            query = Sorting switch
-            {
-                (ProductSorting.Name, Ascending: false) => query.OrderBy(p => p.Name),
-                (ProductSorting.Name, Ascending: true) => query.OrderByDescending(p => p.Name),
-                (ProductSorting.Price, Ascending: false) => query.OrderBy(p => p.Price),
-                (ProductSorting.Price, Ascending: true) => query.OrderByDescending(p => p.Price),
-                (ProductSorting.Stock, Ascending: false) => query.OrderBy(p => p.Stock),
-                (ProductSorting.Stock, Ascending: true) => query.OrderByDescending(p => p.Stock),
-                _ => query
-            };
-
-            return query.ToArray();
-        });
-
-    public override async Task RenderAsync()
+    private Cache<Product[]> Products => Cache(() =>
     {
-        var products = await Products.Value;
+        var query = _productsStorage.Query();
+
+        if (!string.IsNullOrWhiteSpace(SearchPhrase))
+        {
+            query = query.Where(p => p.Name.Contains(SearchPhrase, StringComparison.OrdinalIgnoreCase));
+        }
+
+        query = Sorting switch
+        {
+            (ProductSorting.Name, Ascending: false) => query.OrderBy(p => p.Name),
+            (ProductSorting.Name, Ascending: true) => query.OrderByDescending(p => p.Name),
+            (ProductSorting.Price, Ascending: false) => query.OrderBy(p => p.Price),
+            (ProductSorting.Price, Ascending: true) => query.OrderByDescending(p => p.Price),
+            (ProductSorting.Stock, Ascending: false) => query.OrderBy(p => p.Stock),
+            (ProductSorting.Stock, Ascending: true) => query.OrderByDescending(p => p.Stock),
+            _ => query
+        };
+
+        return query.ToArray();
+    });
+
+    public override void Render()
+    {
+        var products = Products.Value;
 
         Selection.RemoveWhere(id => !products.Any(l => l.Id == id));
 
@@ -70,12 +69,11 @@ public class ProductList : HydroComponent
         }
     }
 
-    public async Task SelectAll(bool value)
+    public void SelectAll(bool value)
     {
         if (value)
         {
-            var products = await Products.Value;
-            Selection = products.Select(p => p.Id).ToHashSet();
+            Selection = Products.Value.Select(p => p.Id).ToHashSet();
         }
         else
         {
